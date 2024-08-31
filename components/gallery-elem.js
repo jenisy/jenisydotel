@@ -21,12 +21,22 @@ galleryTemplate.innerHTML = `
             grid-template-columns: repeat(var(--num-cols), var(--col-width));
             grid-auto-rows: var(--row-height);
             gap: var(--gap);
+
+            border-radius: 10px;
+            background-color: #DADADA;
         }
 
         .gallery > img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+
+            cursor: pointer;
+        }
+
+        .gallery > img:hover {
+            opacity: 0.6;
+            /* box-shadow: 0 4px 8px rgba(0,0,0,0.15); */
         }
 
         /* TODO: animate fade in */
