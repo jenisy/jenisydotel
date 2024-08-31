@@ -3,5 +3,56 @@ body {
 }
 
 .page-content {
+    width: 100%;
+    height: 100%;
+
     display: grid;
+    place-items: center;
+}
+
+.hero {
+    width: 100%;
+    height: 500px;
+
+    background-image: url(/assets/home/6.jpg);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #DADADA;
+
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 16px;
+
+    place-items: center;
+    text-align: center;
+}
+
+.hero-text-container {
+    display: grid;
+    gap: 50px;
+    justify-content: start;
+    padding: 30px;
+
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.hero-title {
+    height: fit-content;
+
+    font-family: 'Amatic SC', Arial;
+    font-weight: 700;
+    font-size: 80px;
+}
+
+.hero-subtitle {
+    height: fit-content;
+
+    color: #3A3A3A;
+    font-family: Merriweather, serif;
+    font-size: 18.0pt;
+    font-style: italic;
+    font-weight: 400;
+    text-decoration: none;
 }

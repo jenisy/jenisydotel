@@ -29,6 +29,7 @@ galleryTemplate.innerHTML = `
             object-fit: cover;
         }
 
+        /* TODO: animate fade in */
         .modal {
             width: 80%;
             height: 80%;
@@ -64,12 +65,13 @@ galleryTemplate.innerHTML = `
 `;
 
 class Gallery extends HTMLElement {
-
     constructor() {
+        // HTMLElement
         super();
         this.attachShadow({mode: "open"});
         this.shadowRoot.append(galleryTemplate.content.cloneNode(true));
 
+        // Vars
         this.images = [
             "/assets/illustrations/0.jpg",
             "/assets/illustrations/1.jpg",
@@ -81,34 +83,37 @@ class Gallery extends HTMLElement {
         this.gallery = this.shadowRoot.getElementById("g_base");
         this.modal = this.shadowRoot.getElementById("g_modal");
         this.modal_content = this.shadowRoot.getElementById("g_m_content");
+        this.ind = 0;
 
-    }
-
-    connectedCallback() {
-        this.setModalContent = (ind) => {
+        // Funcs
+        this.updateGallery = (ind) => {
             // Clear old content
             while (this.modal_content.firstChild) {
                 this.modal_content.removeChild(this.modal_content.firstChild);
             }
 
+            // Set new content
             let img = document.createElement("img");
             img.setAttribute("id", `g_m_c_img_${ind}`);
             img.setAttribute("src", this.images[ind]);
             this.modal_content.appendChild(img);
-        }
 
+            // Update state
+            this.ind = ind;
+        };
         this.openModal = (ind) => {
-            this.setModalContent(ind);
+            this.updateGallery(ind);
             this.modal.showModal();
-        }
-
-        this.modal.addEventListener("click", (_) => {
+        };
+        this.closeModal = (_e) => {
             // if (e.target.id === "g_modal") {
             //     modal.close();
             // }
             this.modal.close();
-        });
+        };
+    }
 
+    connectedCallback() {
         this.images.forEach((img, ind) => {
             let g_img = document.createElement("img");
             g_img.setAttribute("id", `g_img_${ind}`);
@@ -117,10 +122,12 @@ class Gallery extends HTMLElement {
 
             this.gallery.appendChild(g_img);
         })
+
+        this.modal.addEventListener("click", this.closeModal);
     }
 
     disconnectedCallback() {
-        // this.modal.removeEventListener("click", )
+        this.modal.removeEventListener("click", this.closeModal)
     }
 }
 
