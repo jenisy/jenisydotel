@@ -65,6 +65,8 @@ galleryTemplate.innerHTML = `
 `;
 
 class Gallery extends HTMLElement {
+    static observedAttributes = ["images", "start-year"];
+
     constructor() {
         // HTMLElement
         super();
@@ -72,37 +74,14 @@ class Gallery extends HTMLElement {
         this.shadowRoot.append(galleryTemplate.content.cloneNode(true));
 
         // Vars
-        this.images = [
-            "/assets/illustrations/0.jpg",
-            "/assets/illustrations/1.jpg",
-            "/assets/illustrations/2.jpg",
-            "/assets/illustrations/3.jpg",
-            "/assets/illustrations/4.jpg",
-            "/assets/illustrations/5.jpg",
-        ];
         this.gallery = this.shadowRoot.getElementById("g_base");
         this.modal = this.shadowRoot.getElementById("g_modal");
         this.modal_content = this.shadowRoot.getElementById("g_m_content");
         this.ind = 0;
 
         // Funcs
-        this.updateGallery = (ind) => {
-            // Clear old content
-            while (this.modal_content.firstChild) {
-                this.modal_content.removeChild(this.modal_content.firstChild);
-            }
-
-            // Set new content
-            let img = document.createElement("img");
-            img.setAttribute("id", `g_m_c_img_${ind}`);
-            img.setAttribute("src", this.images[ind]);
-            this.modal_content.appendChild(img);
-
-            // Update state
-            this.ind = ind;
-        };
         this.openModal = (ind) => {
-            this.updateGallery(ind);
+            this.updateModal(ind);
             this.modal.showModal();
         };
         this.closeModal = (_e) => {
@@ -113,7 +92,39 @@ class Gallery extends HTMLElement {
         };
     }
 
+    get images() {
+        let images_str = this.getAttribute("images");
+        return images_str.split(",");
+    }
+
+    set images(val) {
+        this.setAttribute("images", val);
+    }
+
     connectedCallback() {
+        this.updateGallery();
+        this.modal.addEventListener("click", this.closeModal);
+    }
+
+    disconnectedCallback() {
+        this.modal.removeEventListener("click", this.closeModal)
+    }
+
+    attributeChangedCallback(attribute, _oldValue, _newValue) {
+        switch(attribute) {
+            case "images":
+                this.updateGallery();
+                break;
+            default:
+                console.log(`Unknown attribute [${attribute}] has changed.`);
+        }
+    }
+
+    updateGallery() {
+        // Clear old content
+        while (this.gallery.firstChild) {
+            this.gallery.removeChild(this.gallery.firstChild);
+        }
         this.images.forEach((img, ind) => {
             let g_img = document.createElement("img");
             g_img.setAttribute("id", `g_img_${ind}`);
@@ -122,12 +133,22 @@ class Gallery extends HTMLElement {
 
             this.gallery.appendChild(g_img);
         })
-
-        this.modal.addEventListener("click", this.closeModal);
     }
 
-    disconnectedCallback() {
-        this.modal.removeEventListener("click", this.closeModal)
+    updateModal(ind) {
+        // Clear old content
+        while (this.modal_content.firstChild) {
+            this.modal_content.removeChild(this.modal_content.firstChild);
+        }
+
+        // Set new content
+        let img = document.createElement("img");
+        img.setAttribute("id", `g_m_c_img_${ind}`);
+        img.setAttribute("src", this.images[ind]);
+        this.modal_content.appendChild(img);
+
+        // Update state
+        this.ind = ind;
     }
 }
 
