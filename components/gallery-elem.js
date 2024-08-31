@@ -1,3 +1,5 @@
+import '/components/image-slider-elem.js';
+
 const galleryTemplate = document.createElement("template");
 galleryTemplate.innerHTML = `
     <style>
@@ -58,24 +60,25 @@ galleryTemplate.innerHTML = `
         }
 
         .modal-content {
-            width: 100%;
-            height: 100%;
+            display: grid;
+            place-items: center;
         }
 
-        .modal-content > img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+        .slider {
+            width: fit-content;
+            display: inline-block;
         }
     </style>
     <div id="g_base" class="gallery"></div>
     <dialog id="g_modal" class="modal">
-        <div id="g_m_content" class="modal-content"></div>
+        <div id="g_m_content" class="modal-content">
+            <image-slider-elem class="slider" id="g_m_slider"></image-slider-elem>
+        </div>
     </dialog>
 `;
 
 class Gallery extends HTMLElement {
-    static observedAttributes = ["images", "start-year"];
+    static observedAttributes = ["images"];
 
     constructor() {
         // HTMLElement
@@ -86,19 +89,18 @@ class Gallery extends HTMLElement {
         // Vars
         this.gallery = this.shadowRoot.getElementById("g_base");
         this.modal = this.shadowRoot.getElementById("g_modal");
-        this.modal_content = this.shadowRoot.getElementById("g_m_content");
+        this.image_slider = this.shadowRoot.getElementById("g_m_slider");
         this.ind = 0;
 
         // Funcs
         this.openModal = (ind) => {
-            this.updateModal(ind);
+            this.image_slider.selected = ind;
             this.modal.showModal();
         };
-        this.closeModal = (_e) => {
-            // if (e.target.id === "g_modal") {
-            //     modal.close();
-            // }
-            this.modal.close();
+        this.closeModal = (e) => {
+            if (e.target.id === "g_modal" || e.target.id === "g_m_content") {
+                this.modal.close();
+            }
         };
     }
 
@@ -131,7 +133,6 @@ class Gallery extends HTMLElement {
     }
 
     updateGallery() {
-        // Clear old content
         while (this.gallery.firstChild) {
             this.gallery.removeChild(this.gallery.firstChild);
         }
@@ -143,22 +144,7 @@ class Gallery extends HTMLElement {
 
             this.gallery.appendChild(g_img);
         })
-    }
-
-    updateModal(ind) {
-        // Clear old content
-        while (this.modal_content.firstChild) {
-            this.modal_content.removeChild(this.modal_content.firstChild);
-        }
-
-        // Set new content
-        let img = document.createElement("img");
-        img.setAttribute("id", `g_m_c_img_${ind}`);
-        img.setAttribute("src", this.images[ind]);
-        this.modal_content.appendChild(img);
-
-        // Update state
-        this.ind = ind;
+        this.image_slider.images = this.images.join(",");
     }
 }
 

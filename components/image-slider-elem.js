@@ -58,7 +58,7 @@ imageSliderTemplate.innerHTML = `
             font-weight: bold;
         }
     </style>
-    <div class="slider">
+    <div id="image-slider" class="slider">
         <div class="list"></div>
         <div class="buttons">
             <button id="prev"><</button>
@@ -68,6 +68,8 @@ imageSliderTemplate.innerHTML = `
 `;
 
 class ImageSlider extends HTMLElement {
+    static observedAttributes = ["images", "selected"];
+
     constructor() {
         super();
         this.attachShadow({mode: "open"});
@@ -82,11 +84,24 @@ class ImageSlider extends HTMLElement {
 
     get images() {
         let images_str = this.getAttribute("images");
+        if (!images_str) {
+            return [];
+        }
+
+        images_str = images_str.replace(/\s+/g,'');
         return images_str.split(",");
     }
 
     set images(val) {
         this.setAttribute("images", val);
+    }
+
+    get selected() {
+        return Number(this.getAttribute("selected"));
+    }
+
+    set selected(val) {
+        this.setAttribute("selected", val);
     }
 
     connectedCallback() {
@@ -95,6 +110,19 @@ class ImageSlider extends HTMLElement {
         this.shadowRoot.addEventListener("resize", () => this.slide(0));
         
         this.updateSlider();
+    }
+
+    attributeChangedCallback(attribute, _oldValue, _newValue) {
+        switch(attribute) {
+            case "images":
+                this.updateSlider();
+                break;
+            case "selected":
+                this.slide(this.selected-this.active);
+                break;
+            default:
+                console.log(`Unknown attribute [${attribute}] has changed.`);
+        }
     }
 
     updateSlider() {
@@ -109,11 +137,14 @@ class ImageSlider extends HTMLElement {
             this.slider.appendChild(s_img);
         })
         this.image_elems = this.shadowRoot.querySelectorAll(".slider .list img");
+        // TODO: make better (not sure why previous method fails during this portion
+        let slide_width_pixels = getComputedStyle(this.shadowRoot.getElementById("image-slider")).getPropertyValue('--width');
+        this.slide_width = Number(slide_width_pixels.substring(0, slide_width_pixels.length-2));
     }
 
     slide(dir) {
         this.active = (this.active + dir + this.images.length) % this.images.length;
-        this.slider.style.left = `${-this.image_elems[this.active].offsetLeft}px`;
+        this.slider.style.left = `${-this.slide_width*this.active}px`;
     }
 }
 
