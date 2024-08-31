@@ -14,7 +14,8 @@ imageSliderTemplate.innerHTML = `
             position: relative;
             overflow: hidden;
 
-            background-color: black;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.6);
         }
         .slider .list {
             width: max-content;
