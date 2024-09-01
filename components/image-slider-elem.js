@@ -6,8 +6,11 @@ imageSliderTemplate.innerHTML = `
             --height: 700px;
             --button-diameter: 50px;
 
+            /*
             width: var(--width);
             max-width: 100vw;
+            */
+            width: 100vw;
             height: var(--height);
 
             margin: auto;
@@ -29,8 +32,11 @@ imageSliderTemplate.innerHTML = `
             transition: 1s;
         }
         .slider .list img {
+            /*
             width: var(--width);
             max-width: 100vw;
+            */
+            width: 100vw;
             height: 100%;
 
             object-fit: contain;
@@ -109,8 +115,19 @@ class ImageSlider extends HTMLElement {
         this.next.onclick = () => this.slide(1);
         this.prev.onclick = () => this.slide(-1);
         this.shadowRoot.addEventListener("resize", () => this.slide(0));
-        
-        this.updateSlider();
+
+        this.resizeObserver = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                let elem = entry.target;
+                console.log(elem);
+                let bounding = elem.getBoundingClientRect();
+                console.log(bounding);
+                // TODO: avoid divide by 0
+                this.slide_width = bounding.width / this.images.length;
+                this.slide(0);
+            }
+        });
+        this.resizeObserver.observe(this.slider);
     }
 
     attributeChangedCallback(attribute, _oldValue, _newValue) {
@@ -138,9 +155,6 @@ class ImageSlider extends HTMLElement {
             this.slider.appendChild(s_img);
         })
         this.image_elems = this.shadowRoot.querySelectorAll(".slider .list img");
-        // TODO: make better (not sure why previous method fails during this portion
-        let slide_width_pixels = getComputedStyle(this.shadowRoot.getElementById("image-slider")).getPropertyValue('--width');
-        this.slide_width = Number(slide_width_pixels.substring(0, slide_width_pixels.length-2));
     }
 
     slide(dir) {
