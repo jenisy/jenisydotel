@@ -7,8 +7,7 @@ storyboardTemplate.innerHTML = `
         }
 
         .storyboard-description {
-            padding-top: 10%;
-            padding-left: 10%;
+            padding: 10% 10% 0px 0px;
 
             grid-area: sbc-a;
         }
@@ -16,6 +15,7 @@ storyboardTemplate.innerHTML = `
         .storyboard-embed {
             min-width: 600px;
             min-height: 400px;
+
             grid-area: sbc-b;
         }
 
@@ -28,17 +28,40 @@ storyboardTemplate.innerHTML = `
 
             display: grid;
             gap: 10px;
+            place-items: center;
             grid-template:
                 'sbc-a sbc-b'
                 'sbc-a sbc-b'
                 'sbc-c sbc-c';
-            /*
-            width: 100%;
-            grid-template:
-                'sbc-a sbc-a sbc-b'
-                'sbc-a sbc-a sbc-b'
-                'sbc-c sbc-c sbc-c';
-            */
+        }
+
+        @media (width < 1600px) {
+            .storyboard-container {
+                grid-template:
+                    'sbc-a'
+                    'sbc-b'
+                    'sbc-c';
+            }
+            .storyboard-description {
+                width: 90%;
+                padding: 0px;
+            }
+            .storyboard-embed {
+                width: 80%;
+                min-width: 0px;
+                min-height: 0px;
+            }
+        }
+
+        @media (width < 800px) {
+            .storyboard-container {
+                width: 90%;
+            }
+            .storyboard-embed {
+                width: 90%;
+                min-width: 0px;
+                min-height: 0px;
+            }
         }
     </style>
     <div id="storyboard_container" class="storyboard-container">
