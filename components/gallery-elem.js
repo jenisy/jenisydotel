@@ -94,7 +94,7 @@ class Gallery extends HTMLElement {
 
         // Funcs
         this.openModal = (ind) => {
-            this.image_slider.selected = ind;
+            this.image_slider.slideTo(ind);
             this.modal.showModal();
         };
         this.closeModal = (e) => {

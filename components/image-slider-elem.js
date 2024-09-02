@@ -64,6 +64,13 @@ imageSliderTemplate.innerHTML = `
             font-family: monospace;
             font-weight: bold;
         }
+
+        .notransition {
+            -webkit-transition: none !important;
+            -moz-transition: none !important;
+            -o-transition: none !important;
+            transition: none !important;
+        }
     </style>
     <div id="image-slider" class="slider">
         <div class="list"></div>
@@ -75,7 +82,7 @@ imageSliderTemplate.innerHTML = `
 `;
 
 class ImageSlider extends HTMLElement {
-    static observedAttributes = ["images", "selected"];
+    static observedAttributes = ["images"];
 
     constructor() {
         super();
@@ -103,14 +110,6 @@ class ImageSlider extends HTMLElement {
         this.setAttribute("images", val);
     }
 
-    get selected() {
-        return Number(this.getAttribute("selected"));
-    }
-
-    set selected(val) {
-        this.setAttribute("selected", val);
-    }
-
     connectedCallback() {
         this.next.onclick = () => this.slide(1);
         this.prev.onclick = () => this.slide(-1);
@@ -124,7 +123,11 @@ class ImageSlider extends HTMLElement {
                 console.log(bounding);
                 // TODO: avoid divide by 0
                 this.slide_width = bounding.width / this.images.length;
+                this.slider.classList.add("notransition");
                 this.slide(0);
+                // Trigger a reflow, flushing the CSS changes
+                this.slider.offsetHeight;
+                this.slider.classList.remove("notransition");
             }
         });
         this.resizeObserver.observe(this.slider);
@@ -134,9 +137,6 @@ class ImageSlider extends HTMLElement {
         switch(attribute) {
             case "images":
                 this.updateSlider();
-                break;
-            case "selected":
-                this.slide(this.selected-this.active);
                 break;
             default:
                 console.log(`Unknown attribute [${attribute}] has changed.`);
@@ -157,9 +157,13 @@ class ImageSlider extends HTMLElement {
         this.image_elems = this.shadowRoot.querySelectorAll(".slider .list img");
     }
 
-    slide(dir) {
-        this.active = (this.active + dir + this.images.length) % this.images.length;
+    slideTo(pos) {
+        this.active = Math.max(pos, 0) % this.images.length;
         this.slider.style.left = `${-this.slide_width*this.active}px`;
+    }
+
+    slide(dir) {
+        this.slideTo((this.active + dir + this.images.length) % this.images.length);
     }
 }
 
