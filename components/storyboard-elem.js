@@ -7,7 +7,7 @@ storyboardTemplate.innerHTML = `
         }
 
         .storyboard-description {
-            padding: 10% 10% 0px 0px;
+            padding: 10% 0px 0px 10%;
 
             grid-area: sbc-a;
         }
