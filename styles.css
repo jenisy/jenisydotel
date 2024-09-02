@@ -88,38 +88,6 @@ body {
     background-color: #DADADA;
 }
 
-.storyboard-description {
-    padding-top: 10%;
-    padding-left: 10%;
-
-    grid-area: sbc-a;
-}
-.storyboard-embed {
-    min-width: 600px;
-    min-height: 400px;
-    grid-area: sbc-b;
-}
-.storyboard-gallery {
-    grid-area: sbc-c;
-}
-.storyboard-container {
-    width: 60%;
-
-    display: grid;
-    gap: 10px;
-    grid-template:
-        'sbc-a sbc-b'
-        'sbc-a sbc-b'
-        'sbc-c sbc-c';
-    /*
-    width: 100%;
-    grid-template:
-        'sbc-a sbc-a sbc-b'
-        'sbc-a sbc-a sbc-b'
-        'sbc-c sbc-c sbc-c';
-    */
-}
-
 @media (width < 1200px) {
     .hero-text-container {
         justify-content: start;
