@@ -43,8 +43,8 @@ galleryTemplate.innerHTML = `
 
         /* TODO: animate fade in */
         .modal {
-            width: 80%;
-            height: 80%;
+            width: 100%;
+            height: 100%;
             padding: 0px;
 
             border: 0px;
@@ -65,6 +65,22 @@ galleryTemplate.innerHTML = `
 
             display: grid;
             place-items: center;
+        }
+
+        @media (width < 1600px) {
+            .slider {
+                --width: 640px;
+                --height: 360px;
+                --button-diameter: 40px;
+            }
+        }
+
+        @media (width < 800px) {
+            .slider {
+                --width: 320px;
+                --height: 180px;
+                --button-diameter: 30px;
+            }
         }
     </style>
     <div id="g_base" class="gallery"></div>

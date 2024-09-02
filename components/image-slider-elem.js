@@ -4,10 +4,6 @@ imageSliderTemplate.innerHTML = `
         :host {
             --width: 1280px;
             --height: 720px;
-            /*
-            --width: 640px;
-            --height: 360px;
-            */
             --button-diameter: 50px;
 
             display: inline-block;
