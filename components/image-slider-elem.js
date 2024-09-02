@@ -70,6 +70,10 @@ imageSliderTemplate.innerHTML = `
         .button-container > button:hover {
             background-color: #5A5A5A60;
         }
+
+        .no-transition {
+            transition: 0s;
+        }
     </style>
     <div class="slider-container">
         <div id="slides" class="slides"></div>
@@ -114,8 +118,16 @@ class ImageSlider extends HTMLElement {
     connectedCallback() {
         this.next.onclick = () => this.slide(1);
         this.prev.onclick = () => this.slide(-1);
-        let width_var = getComputedStyle(this.host).getPropertyValue('--width');
-        this.slide_width = Number(width_var.substring(0, width_var.length - 2));
+        this.updateSlidePos();
+
+        this.resizeObserver = new ResizeObserver((_entries) => {
+            this.slides.classList.add("no-transition");
+            this.updateSlidePos();
+            // Trigger a reflow, flushing the CSS changes
+            this.slides.offsetHeight;
+            this.slides.classList.remove("no-transition");
+        });
+        this.resizeObserver.observe(this.host);
     }
 
     attributeChangedCallback(attribute, _oldValue, _newValue) {
@@ -142,13 +154,16 @@ class ImageSlider extends HTMLElement {
         this.image_elems = this.slides.getElementsByTagName("img");
     }
 
-    slideTo(pos) {
-        this.active = Math.max(pos, 0) % this.images.length;
-
+    updateSlidePos() {
         let width_var = getComputedStyle(this.host).getPropertyValue('--width');
         let slide_width = Number(width_var.substring(0, width_var.length - 2));
 
         this.slides.style.left = `${-slide_width*this.active}px`;
+    }
+
+    slideTo(pos) {
+        this.active = Math.max(pos, 0) % this.images.length;
+        this.updateSlidePos();
     }
 
     slide(dir) {
