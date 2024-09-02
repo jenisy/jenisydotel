@@ -9,6 +9,7 @@ imageSliderTemplate.innerHTML = `
             /*
             width: var(--width);
             max-width: 100vw;
+            height: var(--height);
             */
             width: 100vw;
             height: var(--height);
@@ -64,13 +65,6 @@ imageSliderTemplate.innerHTML = `
             font-family: monospace;
             font-weight: bold;
         }
-
-        .notransition {
-            -webkit-transition: none !important;
-            -moz-transition: none !important;
-            -o-transition: none !important;
-            transition: none !important;
-        }
     </style>
     <div id="image-slider" class="slider">
         <div class="list"></div>
@@ -118,16 +112,10 @@ class ImageSlider extends HTMLElement {
         this.resizeObserver = new ResizeObserver((entries) => {
             for (const entry of entries) {
                 let elem = entry.target;
-                console.log(elem);
                 let bounding = elem.getBoundingClientRect();
-                console.log(bounding);
                 // TODO: avoid divide by 0
                 this.slide_width = bounding.width / this.images.length;
-                this.slider.classList.add("notransition");
-                this.slide(0);
-                // Trigger a reflow, flushing the CSS changes
-                this.slider.offsetHeight;
-                this.slider.classList.remove("notransition");
+                withoutTrans(this.slider, () => this.slide(0));
             }
         });
         this.resizeObserver.observe(this.slider);
@@ -165,6 +153,21 @@ class ImageSlider extends HTMLElement {
     slide(dir) {
         this.slideTo((this.active + dir + this.images.length) % this.images.length);
     }
+}
+
+function withoutTrans(elem, func) {
+    let transProps = ["-webkit-transition-property", "-moz-transition-property", "-o-transition-property", "transition-property"];
+    const prevProps = transProps.reduce((prev, prop, _) => (prev[prop] = elem.style[prop], prev), {});
+    // This somewhat works, but unsure cause it only applies `transition-property`
+    transProps.forEach((prop,_) => {
+        console.log(prop, ":", elem.style[prop]);
+        elem.style[prop] = "none";
+    });
+    // elem.style["transition-property"] = "none";
+    // console.log(elem.style);
+    func();
+    elem.offsetHeight;  // Trigger a reflow, flushing the CSS changes
+    transProps.forEach((prop,_) => elem.style[prop] = prevProps[prop]);
 }
 
 customElements.define("image-slider-elem", ImageSlider);
