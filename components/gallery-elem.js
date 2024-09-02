@@ -45,8 +45,8 @@ galleryTemplate.innerHTML = `
         .modal {
             width: 80%;
             height: 80%;
-
             padding: 0px;
+
             border: 0px;
             outline: none;
             background-color: transparent;
@@ -60,13 +60,11 @@ galleryTemplate.innerHTML = `
         }
 
         .modal-content {
+            width: 100%;
+            height: 100%;
+
             display: grid;
             place-items: center;
-        }
-
-        .slider {
-            width: fit-content;
-            display: inline-block;
         }
     </style>
     <div id="g_base" class="gallery"></div>
