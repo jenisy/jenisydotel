@@ -8,7 +8,7 @@ imageSliderTemplate.innerHTML = `
 
             display: inline-block;
             width: var(--width);
-            height: var(--height);
+            height: 100%;
         }
 
         .slider-container {
@@ -26,7 +26,7 @@ imageSliderTemplate.innerHTML = `
 
         .slides {
             width: fit-content;
-            height: var(--height);
+            height: 100%;
 
             display: flex;
             position: absolute;
@@ -38,7 +38,7 @@ imageSliderTemplate.innerHTML = `
 
         .slides > img {
             width: var(--width);
-            height: var(--height);
+            height: 100%;
             object-fit: contain;
         }
 
@@ -69,6 +69,12 @@ imageSliderTemplate.innerHTML = `
 
         .button-container > button:hover {
             background-color: #5A5A5A60;
+        }
+
+        @media (orientation: landscape) {
+            :host {
+                height: var(--height);
+            }
         }
 
         .no-transition {
