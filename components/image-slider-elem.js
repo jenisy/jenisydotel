@@ -1,67 +1,79 @@
 const imageSliderTemplate = document.createElement("template");
 imageSliderTemplate.innerHTML = `
     <style>
-        .slider {
-            --width: 1300px;
-            --height: 700px;
+        :host {
+            --width: 1280px;
+            --height: 720px;
             --button-diameter: 50px;
 
+            display: inline-block;
             width: var(--width);
-            max-width: 100vw;
+            height: var(--height);
+        }
+
+        .slider-container {
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+
+            border-radius: 20px;
+            background-color: #000000D0;
+        }
+
+        .slides {
+            width: fit-content;
             height: var(--height);
 
-            margin: auto;
-            position: relative;
-            overflow: hidden;
-
-            border-radius: 10px;
-            background-color: rgba(0, 0, 0, 0.6);
-        }
-        .slider .list {
-            width: max-content;
-            height: 100%;
-
-            position: absolute;
-            left: 0;
-            top: 0;
-
             display: flex;
-            transition: 1s;
-        }
-        .slider .list img {
-            width: var(--width);
-            max-width: 100vw;
-            height: 100%;
+            position: absolute;
+            left: 0px;
+            z-index: 0;
 
+            transition: 0.5s;
+        }
+
+        .slides > img {
+            width: var(--width);
+            height: var(--height);
             object-fit: contain;
         }
-        .slider .buttons {
-            width: 90%;
 
-            position: absolute;
-            top: 45%;
-            left: 5%;
+        .button-container {
+            width: 100%;
+            height: fit-content;
+            padding: 2%;
 
             display: flex;
+            position: relative;
             justify-content: space-between;
+            z-idex: 1;
         }
-        .slider .buttons button {
+
+        .button-container > button {
             width: var(--button-diameter);
             height: var(--button-diameter);
 
             border: none;
             border-radius: 50%;
 
-            background-color: #FFF5;
+            background-color: #8A8A8A60;
 
-            color: #FFF;
+            color: #000000;
             font-family: monospace;
             font-weight: bold;
         }
+
+        .button-container > button:hover {
+            background-color: #5A5A5A60;
+        }
     </style>
-    <div id="image-slider" class="slider">
-        <div class="list"></div>
-        <div class="buttons">
+    <div class="slider-container">
+        <div id="slides" class="slides"></div>
+        <div class="button-container">
             <button id="prev"><</button>
             <button id="next">></button>
         </div>
@@ -69,16 +81,18 @@ imageSliderTemplate.innerHTML = `
 `;
 
 class ImageSlider extends HTMLElement {
-    static observedAttributes = ["images", "selected"];
+    static observedAttributes = ["images"];
 
     constructor() {
         super();
         this.attachShadow({mode: "open"});
         this.shadowRoot.append(imageSliderTemplate.content.cloneNode(true));
 
-        this.slider = this.shadowRoot.querySelector(".slider .list");
-        this.next = this.shadowRoot.getElementById("next");
+        this.host = this.shadowRoot.host;
+        this.slides = this.shadowRoot.getElementById("slides");
+        this.image_elems = this.slides.getElementsByTagName("img");
         this.prev = this.shadowRoot.getElementById("prev");
+        this.next = this.shadowRoot.getElementById("next");
 
         this.active = 0;
     }
@@ -97,55 +111,48 @@ class ImageSlider extends HTMLElement {
         this.setAttribute("images", val);
     }
 
-    get selected() {
-        return Number(this.getAttribute("selected"));
-    }
-
-    set selected(val) {
-        this.setAttribute("selected", val);
-    }
-
     connectedCallback() {
         this.next.onclick = () => this.slide(1);
         this.prev.onclick = () => this.slide(-1);
-        this.shadowRoot.addEventListener("resize", () => this.slide(0));
-        
-        this.updateSlider();
+        let width_var = getComputedStyle(this.host).getPropertyValue('--width');
+        this.slide_width = Number(width_var.substring(0, width_var.length - 2));
     }
 
     attributeChangedCallback(attribute, _oldValue, _newValue) {
         switch(attribute) {
             case "images":
-                this.updateSlider();
-                break;
-            case "selected":
-                this.slide(this.selected-this.active);
+                this.onImagesChanged();
                 break;
             default:
                 console.log(`Unknown attribute [${attribute}] has changed.`);
         }
     }
 
-    updateSlider() {
-        while (this.slider.firstChild) {
-            this.slider.removeChild(this.slider.firstChild);
+    onImagesChanged() {
+        while (this.slides.firstChild) {
+            this.slides.removeChild(this.slides.firstChild);
         }
         this.images.forEach((img, ind) => {
             let s_img = document.createElement("img");
             s_img.setAttribute("id", `s_img_${ind}`);
             s_img.setAttribute("src", img);
 
-            this.slider.appendChild(s_img);
+            this.slides.appendChild(s_img);
         })
-        this.image_elems = this.shadowRoot.querySelectorAll(".slider .list img");
-        // TODO: make better (not sure why previous method fails during this portion
-        let slide_width_pixels = getComputedStyle(this.shadowRoot.getElementById("image-slider")).getPropertyValue('--width');
-        this.slide_width = Number(slide_width_pixels.substring(0, slide_width_pixels.length-2));
+        this.image_elems = this.slides.getElementsByTagName("img");
+    }
+
+    slideTo(pos) {
+        this.active = Math.max(pos, 0) % this.images.length;
+
+        let width_var = getComputedStyle(this.host).getPropertyValue('--width');
+        let slide_width = Number(width_var.substring(0, width_var.length - 2));
+
+        this.slides.style.left = `${-slide_width*this.active}px`;
     }
 
     slide(dir) {
-        this.active = (this.active + dir + this.images.length) % this.images.length;
-        this.slider.style.left = `${-this.slide_width*this.active}px`;
+        this.slideTo((this.active + dir + this.images.length) % this.images.length);
     }
 }
 

@@ -43,10 +43,10 @@ galleryTemplate.innerHTML = `
 
         /* TODO: animate fade in */
         .modal {
-            width: 80%;
-            height: 80%;
-
+            width: 100%;
+            height: 100%;
             padding: 0px;
+
             border: 0px;
             outline: none;
             background-color: transparent;
@@ -60,13 +60,27 @@ galleryTemplate.innerHTML = `
         }
 
         .modal-content {
+            width: 100%;
+            height: 100%;
+
             display: grid;
             place-items: center;
         }
 
-        .slider {
-            width: fit-content;
-            display: inline-block;
+        @media (width < 1600px) {
+            .slider {
+                --width: 640px;
+                --height: 360px;
+                --button-diameter: 40px;
+            }
+        }
+
+        @media (width < 800px) {
+            .slider {
+                --width: 320px;
+                --height: 180px;
+                --button-diameter: 30px;
+            }
         }
     </style>
     <div id="g_base" class="gallery"></div>
@@ -94,7 +108,7 @@ class Gallery extends HTMLElement {
 
         // Funcs
         this.openModal = (ind) => {
-            this.image_slider.selected = ind;
+            this.image_slider.slideTo(ind);
             this.modal.showModal();
         };
         this.closeModal = (e) => {
