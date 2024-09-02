@@ -1,17 +1,29 @@
 const imageSliderTemplate = document.createElement("template");
 imageSliderTemplate.innerHTML = `
     <style>
-        .slider {
+        :host {
             --width: 1300px;
             --height: 700px;
             --button-diameter: 50px;
 
-            /*
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+
+            container-type: inline-size;
+            container-name: image-slider;
+        }
+        @container image-slider (max-width: 600px) {
+            :host {
+                --width: 700px;
+                --height: 375px;
+                --button-diameter: 30px;
+                background-color: blue;
+            }
+        }
+        .slider {
             width: var(--width);
             max-width: 100vw;
-            height: var(--height);
-            */
-            width: 100vw;
             height: var(--height);
 
             margin: auto;
@@ -33,11 +45,8 @@ imageSliderTemplate.innerHTML = `
             transition: 1s;
         }
         .slider .list img {
-            /*
             width: var(--width);
             max-width: 100vw;
-            */
-            width: 100vw;
             height: 100%;
 
             object-fit: contain;
