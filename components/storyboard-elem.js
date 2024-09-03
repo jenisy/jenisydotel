@@ -8,21 +8,29 @@ storyboardTemplate.innerHTML = `
             place-items: center;
         }
 
-        .storyboard-description {
-            padding: 10% 0px 0px 10%;
-
+        .storyboard-header {
             grid-area: sbc-a;
+
+            font-family: 'Amatic SC', Arial;
+            font-weight: 700;
+            font-size: 80px;
+        }
+
+        .storyboard-description {
+            grid-area: sbc-b;
+
+            font-family: Arial;
         }
 
         .storyboard-embed {
+            grid-area: sbc-c;
+
             min-width: 600px;
             min-height: 400px;
-
-            grid-area: sbc-b;
         }
 
         .storyboard-gallery {
-            grid-area: sbc-c;
+            grid-area: sbc-d;
         }
 
         .storyboard-container {
@@ -32,9 +40,9 @@ storyboardTemplate.innerHTML = `
             gap: 10px;
             place-items: center;
             grid-template:
-                'sbc-a sbc-b'
-                'sbc-a sbc-b'
-                'sbc-c sbc-c';
+                'sbc-a sbc-c'
+                'sbc-b sbc-c'
+                'sbc-d sbc-d';
         }
 
         .gallery {
@@ -49,7 +57,8 @@ storyboardTemplate.innerHTML = `
                 grid-template:
                     'sbc-a'
                     'sbc-b'
-                    'sbc-c';
+                    'sbc-c'
+                    'sbc-d';
             }
             .storyboard-description {
                 width: 90%;
@@ -66,6 +75,12 @@ storyboardTemplate.innerHTML = `
             }
         }
 
+        @media (width < 1000px) {
+            .storyboard-header {
+                font-size: 40px;
+            }
+        }
+
         @media (width < 800px) {
             .storyboard-container {
                 width: 90%;
@@ -78,6 +93,9 @@ storyboardTemplate.innerHTML = `
         }
     </style>
     <div id="storyboard_container" class="storyboard-container">
+        <div id="storyboard_header" class="storyboard-header">
+            <slot name="storyboard-header">HEADER NEEDED</slot>
+        </div>
         <div id="storyboard_description" class="storyboard-description">
             <slot name="storyboard-description">DESCRIPTION NEEDED</slot>
         </div>
