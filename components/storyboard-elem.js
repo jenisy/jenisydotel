@@ -19,7 +19,6 @@ storyboardTemplate.innerHTML = `
         .storyboard-description {
             grid-area: sbc-b;
 
-            /* padding: 10% 0px 0px 10%; */
             font-family: Arial;
         }
 

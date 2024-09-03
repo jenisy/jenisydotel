@@ -94,6 +94,13 @@ body {
     font-size: 60px;
 }
 
+.filler-text {
+    color: white;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 @media (width < 1200px) {
     .hero-text-container {
         justify-content: start;
