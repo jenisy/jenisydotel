@@ -61,7 +61,8 @@ storyboardTemplate.innerHTML = `
                 min-height: 0px;
             }
             .gallery {
-                --num-cols: 4;
+                --row-height: 140px;
+                --col-width: 140px;
             }
         }
 
@@ -73,11 +74,6 @@ storyboardTemplate.innerHTML = `
                 width: 90%;
                 min-width: 0px;
                 min-height: 0px;
-            }
-            .gallery {
-                --num-cols: 2;
-                --row-height: 140px;
-                --col-width: 140px;
             }
         }
     </style>
