@@ -101,6 +101,12 @@ body {
     user-select: none;
 }
 
+@media (width < 1000px) {
+    .filler-text {
+        display: none;
+    }
+}
+
 @media (width < 1200px) {
     .hero-text-container {
         justify-content: start;
