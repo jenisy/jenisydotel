@@ -2,7 +2,7 @@
 const resVer = "0.0.1";
 
 // Note: find by running:
-// `git ls-tree -r <branch_name>`
+// `git ls-tree -r <branch_name> --name-only`
 // Add parent dirs containing `index.html`
 // And ignore any files that don't need to be cached (i.e. serviceWorker.js)
 const resources = [
