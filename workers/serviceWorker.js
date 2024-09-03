@@ -1,23 +1,31 @@
 // Note: Update 'resVer' when updating resources
-const resVer = "0.0.1";
+const resVer = "0.0.2";
 
 // Note: find by running:
-// `git ls-tree -r <branch_name> --name-only`
+// `git ls-tree -r <branch_name> --name-only | awk '{ printf "\"/%s\",\n", $1 }'`
 // Add parent dirs containing `index.html`
 // And ignore any files that don't need to be cached (i.e. serviceWorker.js)
 const resources = [
+    // Manual
     "/",
+    "/illustrations/",
+
+    // Auto: using above cmd (and removing ones to be ignored)
     // "/404.html",  //TODO: add
     "/assets/favicon.png",
-    "/assets/home/0.jpg",
-    "/assets/home/1.jpg",
-    "/assets/home/2.jpg",
-    "/assets/home/3.jpg",
-    "/assets/home/4.jpg",
+    "/assets/home/0.png",
+    "/assets/home/1.png",
+    "/assets/home/2.png",
+    "/assets/home/3.png",
+    "/assets/home/4.png",
+    "/assets/home/5.png",
+    "/assets/home/6.png",
+    "/assets/home/7.png",
+    "/assets/home/hero_bg.png",
     "/assets/illustrations/art_fight_0.jpg",
     "/assets/illustrations/astarion.jpg",
     "/assets/illustrations/com_0.jpg",
-    "/assets/illustrations/gojo.jpg",
+    "/assets/illustrations/farcille.png",
     "/assets/illustrations/leon.jpg",
     "/assets/illustrations/toji.jpg",
     "/assets/storyboards/storyboard_0/0.png",
@@ -25,7 +33,6 @@ const resources = [
     "/components/gallery-elem.js",
     "/components/image-slider-elem.js",
     "/components/storyboard-elem.js",
-    "/illustrations/",
     "/illustrations/index.html",
     "/index.html",
     "/main.js",
