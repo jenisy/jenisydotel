@@ -90,6 +90,8 @@ imageSliderTemplate.innerHTML = `
     </div>
 `;
 
+const SWIPE_SPEED_THRESHOLD = 0.75;
+
 class ImageSlider extends HTMLElement {
     static observedAttributes = ["images"];
 
@@ -122,9 +124,10 @@ class ImageSlider extends HTMLElement {
     }
 
     connectedCallback() {
-        this.next.onclick = () => this.slide(1);
-        this.prev.onclick = () => this.slide(-1);
-        this.updateSlidePos();
+        this.prev.addEventListener("click", () => this.slide(-1));
+        this.next.addEventListener("click", () => this.slide(1));
+        this.addEventListener("touchstart", this.handleTouchStart);
+        this.addEventListener("touchend", this.handleTouchEnd);
 
         this.resizeObserver = new ResizeObserver((_entries) => {
             this.slides.classList.add("no-transition");
@@ -134,6 +137,8 @@ class ImageSlider extends HTMLElement {
             this.slides.classList.remove("no-transition");
         });
         this.resizeObserver.observe(this.host);
+
+        this.updateSlidePos();
     }
 
     attributeChangedCallback(attribute, _oldValue, _newValue) {
@@ -174,6 +179,37 @@ class ImageSlider extends HTMLElement {
 
     slide(dir) {
         this.slideTo((this.active + dir + this.images.length) % this.images.length);
+    }
+
+    handleTouchStart(e) {
+        this.touchStartData = {
+            x: e.changedTouches[0].screenX,
+            y: e.changedTouches[0].screenY,
+            time: Date.now(),
+        };
+    }
+
+    handleTouchEnd(e) {
+        let deltas = {
+            x: e.changedTouches[0].screenX - this.touchStartData.x,
+            y: e.changedTouches[0].screenY - this.touchStartData.y,
+            time: Date.now() - this.touchStartData.time,
+        };
+
+        // Determine what we want to consider a swipe (left or right)
+        if (Math.abs(deltas.y) >= Math.abs(deltas.x)) {
+            return;  // swipe vertical not horizontal
+        }
+        if (Math.abs(deltas.x / deltas.time) < SWIPE_SPEED_THRESHOLD) {
+            return;  // swipe too slow
+        }
+
+        let isLeftSwipe = deltas.x < 0;
+        if (isLeftSwipe) {
+            this.slide(1);  // Swipe left means go right
+        } else {
+            this.slide(-1);  // And vice versa
+        }
     }
 }
 
