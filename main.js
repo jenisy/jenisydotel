@@ -6,7 +6,7 @@ import '../components/storyboard-elem.js';
 async function registerServiceWorker() {
   if (navigator && "serviceWorker" in navigator) {
     try {
-      await navigator.serviceWorker.register("/workers/serviceWorker.js", { scope: "/" });
+      await navigator.serviceWorker.register("/workers/serviceWorker.js");
     } catch (error) {
       console.error(`Registration failed with ${error}`);
     }
