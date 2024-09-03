@@ -1,17 +1,36 @@
 // Note: Update 'resVer' when updating resources
 const resVer = "0.0.1";
+
+// Note: find by running:
+// `git ls-tree -r <branch_name>`
+// Add parent dirs containing `index.html`
+// And ignore any files that don't need to be cached (i.e. serviceWorker.js)
 const resources = [
     "/",
-    "/404.html",
+    // "/404.html",  //TODO: add
+    "/assets/favicon.png",
+    "/assets/home/0.jpg",
+    "/assets/home/1.jpg",
+    "/assets/home/2.jpg",
+    "/assets/home/3.jpg",
+    "/assets/home/4.jpg",
+    "/assets/illustrations/art_fight_0.jpg",
+    "/assets/illustrations/astarion.jpg",
+    "/assets/illustrations/com_0.jpg",
+    "/assets/illustrations/gojo.jpg",
+    "/assets/illustrations/leon.jpg",
+    "/assets/illustrations/toji.jpg",
+    "/assets/storyboards/storyboard_0/0.png",
+    "/components/copyright-elem.js",
+    "/components/gallery-elem.js",
+    "/components/image-slider-elem.js",
+    "/components/storyboard-elem.js",
+    "/illustrations/",
+    "/illustrations/index.html",
     "/index.html",
-
-    "/style.css",
-
     "/main.js",
-    "/tickWorker.js",
-
-    "/assets/audio/Perc_Can_hi.wav",
-    "/assets/audio/Perc_Can_lo.wav",
+    "/robots.txt",
+    "/styles.css",
 ];
 const cacheName = `resources_v${resVer}`;
 
