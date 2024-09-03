@@ -1,12 +1,14 @@
 // Note: Update 'resVer' when updating resources
-const resVer = "0.0.1";
+const resVer = "0.0.2";
 
 // Note: find by running:
-// `git ls-tree -r <branch_name> --name-only`
+// `git ls-tree -r <branch_name> --name-only | awk '{ printf "\"/%s\",\n", $1 }'`
 // Add parent dirs containing `index.html`
 // And ignore any files that don't need to be cached (i.e. serviceWorker.js)
 const resources = [
     "/",
+    "/illustrations/",
+
     // "/404.html",  //TODO: add
     "/assets/favicon.png",
     "/assets/home/0.jpg",
@@ -26,7 +28,6 @@ const resources = [
     "/components/gallery-elem.js",
     "/components/image-slider-elem.js",
     "/components/storyboard-elem.js",
-    "/illustrations/",
     "/illustrations/index.html",
     "/index.html",
     "/main.js",
