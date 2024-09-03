@@ -88,6 +88,12 @@ body {
     background-color: #DADADA;
 }
 
+.section-header {
+    font-family: 'Amatic SC', Arial;
+    font-weight: 700;
+    font-size: 60px;
+}
+
 @media (width < 1200px) {
     .hero-text-container {
         justify-content: start;
