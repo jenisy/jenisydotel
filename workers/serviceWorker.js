@@ -6,9 +6,11 @@ const resVer = "0.0.2";
 // Add parent dirs containing `index.html`
 // And ignore any files that don't need to be cached (i.e. serviceWorker.js)
 const resources = [
+    // Manual
     "/",
     "/illustrations/",
 
+    // Auto: using above cmd (and removing ones to be ignored)
     // "/404.html",  //TODO: add
     "/assets/favicon.png",
     "/assets/home/0.jpg",
