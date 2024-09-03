@@ -1,3 +1,5 @@
+import '/components/gallery-elem.js';
+
 const storyboardTemplate = document.createElement("template");
 storyboardTemplate.innerHTML = `
     <style>
@@ -35,6 +37,13 @@ storyboardTemplate.innerHTML = `
                 'sbc-c sbc-c';
         }
 
+        .gallery {
+            --gap: 0px;
+            --num-cols: 6;
+            --row-height: 180px;
+            --col-width: 180px;
+        }
+
         @media (width < 1600px) {
             .storyboard-container {
                 grid-template:
@@ -51,6 +60,9 @@ storyboardTemplate.innerHTML = `
                 min-width: 0px;
                 min-height: 0px;
             }
+            .gallery {
+                --num-cols: 4;
+            }
         }
 
         @media (width < 800px) {
@@ -62,6 +74,11 @@ storyboardTemplate.innerHTML = `
                 min-width: 0px;
                 min-height: 0px;
             }
+            .gallery {
+                --num-cols: 2;
+                --row-height: 140px;
+                --col-width: 140px;
+            }
         }
     </style>
     <div id="storyboard_container" class="storyboard-container">
@@ -72,15 +89,43 @@ storyboardTemplate.innerHTML = `
             <slot name="storyboard-embed">EMBED NEEDED</slot>
         </div>
         <div id="storyboard_gallery" class="storyboard-gallery">
+            <gallery-elem id="gallery" class="gallery"></gallery-elem>
         </div>
     </div>
 `;
 
 class Storyboard extends HTMLElement {
+    static observedAttributes = ["images"];
+
     constructor() {
         super();
         this.attachShadow({mode: "open"});
         this.shadowRoot.append(storyboardTemplate.content.cloneNode(true));
+
+        this.gallery = this.shadowRoot.getElementById("gallery");
+    }
+
+    get images() {
+        let images_str = this.getAttribute("images");
+        return images_str.split(",");
+    }
+
+    set images(val) {
+        this.setAttribute("images", val);
+    }
+
+    attributeChangedCallback(attribute, _oldValue, _newValue) {
+        switch(attribute) {
+            case "images":
+                this.updateGallery();
+                break;
+            default:
+                console.log(`Unknown attribute [${attribute}] has changed.`);
+        }
+    }
+
+    updateGallery() {
+        this.gallery.images = this.images.join(",");
     }
 }
 

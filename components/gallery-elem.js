@@ -3,13 +3,17 @@ import '/components/image-slider-elem.js';
 const galleryTemplate = document.createElement("template");
 galleryTemplate.innerHTML = `
     <style>
-        .gallery {
+        :host {
             /* Settable Vars */
             --gap: 16px;
             --num-cols: 3;
             --row-height: 300px;
             --col-width: 300px;
 
+            border-radius: 10px;
+            background-color: #DADADA;
+        }
+        .gallery {
             /* Derived Vars */
             --padding: var(--gap);
             --num-gaps-horizontal: calc(var(--num-cols) - 1);
@@ -23,9 +27,6 @@ galleryTemplate.innerHTML = `
             grid-template-columns: repeat(var(--num-cols), var(--col-width));
             grid-auto-rows: var(--row-height);
             gap: var(--gap);
-
-            border-radius: 10px;
-            background-color: #DADADA;
         }
 
         .gallery > img {
@@ -38,7 +39,6 @@ galleryTemplate.innerHTML = `
 
         .gallery > img:hover {
             opacity: 0.6;
-            /* box-shadow: 0 4px 8px rgba(0,0,0,0.15); */
         }
 
         /* TODO: animate fade in */
@@ -156,6 +156,9 @@ class Gallery extends HTMLElement {
 
     get images() {
         let images_str = this.getAttribute("images");
+        if (!images_str) {
+            return [];
+        }
         return images_str.split(",");
     }
 
