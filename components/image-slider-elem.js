@@ -90,7 +90,7 @@ imageSliderTemplate.innerHTML = `
     </div>
 `;
 
-const SWIPE_SPEED_THRESHOLD = 0.75;
+const SWIPE_SPEED_THRESHOLD = 0.25;
 
 class ImageSlider extends HTMLElement {
     static observedAttributes = ["images"];
